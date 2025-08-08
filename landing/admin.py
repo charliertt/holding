@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Categoria, Etiqueta, Publicacion
+from .models import Categoria, Etiqueta, Publicacion, Candidato
+
 
 
 @admin.register(Categoria)
@@ -28,3 +29,7 @@ class PublicacionAdmin(admin.ModelAdmin):
     date_hierarchy = 'fecha_publicacion'
     ordering = ('-fecha_publicacion',)
 
+
+@admin.register(Candidato)
+class CandidatoAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'correo', 'telefono', 'fecha_envio' )

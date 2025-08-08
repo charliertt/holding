@@ -1,7 +1,12 @@
 from django.shortcuts import render
-from .models import Publicacion, Categoria, Etiqueta
+from .models import Publicacion, Categoria, Etiqueta, Candidato
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+
+
+from django.core.mail import EmailMessage
+from django.contrib import messages
 
 
 # Create your views here.
@@ -71,3 +76,62 @@ def tag_detail(request, slug):
         'categorias': categorias,
         'etiquetas': etiquetas,
     })
+    
+    
+def guardar_cv(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        correo = request.POST.get('correo')
+        telefono = request.POST.get('telefono')
+        cv = request.FILES.get('cv')
+
+        if nombre and correo and telefono and cv:
+            # Guardar en la BD
+            Candidato.objects.create(
+                nombre=nombre,
+                correo=correo,
+                telefono=telefono,
+                cv=cv
+            )
+
+            try:
+                # 1️⃣ Correo para el administrador
+                email_admin = EmailMessage(
+                    subject=f"Nuevo CV recibido de {nombre}",
+                    body=(
+                        f"Se ha recibido un nuevo currículum:\n\n"
+                        f"Nombre: {nombre}\n"
+                        f"Correo: {correo}\n"
+                        f"Teléfono: {telefono}\n"
+                    ),
+                    from_email="admin@mercadologosholding.com",  # remitente visible
+                    to=["admin@mercadologosholding.com"],  # destinatario real
+                )
+                email_admin.attach(cv.name, cv.read(), cv.content_type)
+                email_admin.send()
+
+                # 2️⃣ Correo de confirmación para el candidato
+                email_candidato = EmailMessage(
+                    subject="Hemos recibido tu CV - Mercadólogos Holding",
+                    body=(
+                        f"Hola {nombre},\n\n"
+                        "Gracias por enviarnos tu currículum. Nuestro equipo lo revisará y "
+                        "te contactaremos si tu perfil encaja con nuestras vacantes.\n\n"
+                        "Saludos cordiales,\n"
+                        "Equipo de Reclutamiento\n"
+                        "Mercadólogos Holding"
+                    ),
+                    from_email="admin@mercadologosholding.com",
+                    to=[correo],
+                )
+                email_candidato.send()
+
+                messages.success(request, 'Tu CV fue enviado con éxito.')
+            except Exception as e:
+                messages.error(request, f"Ocurrió un error al enviar el correo: {e}")
+
+            return redirect('equipo')
+        else:
+            messages.error(request, 'Todos los campos son obligatorios.')
+
+    return redirect('equipo')

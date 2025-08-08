@@ -6,13 +6,13 @@
 
    <!-- Breadcrumb Wrapper -->
    <div class="breadcrumb-wrapper bg-img jarallax bg-overlay" data-jarallax="" data-speed="0.6"
-      style="background-image: url('img/bg-img/32.jpg');">
+      style="background-image: url('{% static 'img/bg-img/3.png' %}');">
       <div class="container h-100">
          <div class="breadcrumb-content h-100">
-            <h2 class="wow fadeInUp" data-wow-duration="1000ms" data-wow-delay="700ms">Blog Details</h2>
+            <h2 class="wow fadeInUp" data-wow-duration="1000ms" data-wow-delay="700ms">Detalles</h2>
             <ul class="list-unstyled wow fadeInUp" data-wow-duration="1000ms" data-wow-delay="1000ms">
-               <li><a href="index.html">Home</a></li>
-               <li>Blog Details</li>
+               <li><a href="{% url 'index' %}">Inicio</a></li>
+               <li>Blog</li>
             </ul>
          </div>
       </div>
@@ -67,19 +67,21 @@
 
                <!-- Comments -->
                <div class="blog-comments">
-                  <h3 class="mb-5">01 Comment</h3>
+                  <h3 class="mb-5">Autor</h3>
                   <ul class="list-unstyled blog-comments-list">
                      <li>
-                        <p class="mb-0">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots
-                           in a piece of classical Latin literature from 45 BC, making</p>
+                        <p class="mb-0"><p class="mb-0">
+                            Cada publicación refleja esa visión y compromiso con resultados reales.
+                        </p></p>
 
-                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-4 mt-4">
-                           <div>
-                              <h4 class="mb-1">Laura johnson</h4>
-                              <p class="mb-0">December 23,2023 at 8:50 P.M</p>
+                           <div class="d-flex align-items-center justify-content-between flex-wrap gap-4 mt-4">
+                              <div>
+                                 <h4 class="mb-1">{{ publicacion.autor.get_full_name }}</h4>
+                                 <p class="mb-0">{{ publicacion.fecha_publicacion|date:"F d, Y \\a\\t h:i A" }}</p>
+                              </div>
+                              <!-- <a href="#" class="btn btn-sm btn-primary"><span>REPLY</span><span>REY</span></a> -->
                            </div>
-                           <a href="#" class="btn btn-sm btn-primary"><span>REPLY</span><span>REPLY</span></a>
-                        </div>
+                           
                      </li>
                   </ul>
                </div>
@@ -93,113 +95,61 @@
             <div class="col-12 col-md-7 col-lg-4">
                <div class="d-flex flex-column gap-5">
                   <!-- Widget -->
-                  <div class="blog-widget">
-                     <h4 class="mb-4">Search Here</h4>
-                     <!-- Form -->
-                     <form action="#" method="get">
-                        <input type="search" placeholder="Search..." class="form-control">
-                        <button type="submit">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                              fill="none">
-                              <path
-                                 d="M5.81127 5.43613C8.9183 2.44107 13.5422 2.56045 16.4179 5.43613C19.1677 8.186 19.3359 12.54 16.9222 15.486L21.1908 19.755L20.1302 20.8157L15.8611 16.5471C12.9151 18.9607 8.56114 18.7926 5.81127 16.0427C2.93559 13.1671 2.80038 8.33851 5.81127 5.43613ZM15.3572 6.49679C13.0141 4.15364 9.21508 4.15364 6.87193 6.49679C4.52879 8.83993 4.52879 12.6389 6.87193 14.9821C9.21508 17.3252 13.0141 17.3252 15.3572 14.9821C17.7004 12.6389 17.7004 8.83993 15.3572 6.49679Z"
-                                 fill="#0E0E0E" />
-                           </svg>
-                        </button>
-                     </form>
-                  </div>
+                  
 
                   <!-- Widget -->
                   <div class="blog-widget">
-                     <h4 class="mb-4">Categories</h4>
-
+                     <h4 class="mb-4">Categorías</h4>
+                  
                      <ul class="blog-list">
-                        <li>
-                           <a href="blog-details.html">
-                              Agency
-                              <span>(03)</span>
-                           </a>
-                        </li>
-                        <li>
-                           <a href="blog-details.html">
-                              Business
-                              <span>(01)</span>
-                           </a>
-                        </li>
-                        <li>
-                           <a href="blog-details.html">
-                              Development
-                              <span>(05)</span>
-                           </a>
-                        </li>
-                        <li>
-                           <a href="blog-details.html">
-                              UI/UX Design
-                              <span>(02)</span>
-                           </a>
-                        </li>
-                        <li>
-                           <a href="blog-details.html">
-                              Marketing
-                              <span>(04)</span>
-                           </a>
-                        </li>
+                        {% for categoria in categorias %}
+                           <li>
+                              <a href="">
+                                 {{ categoria.nombre }}
+                                 <span>({{ categoria.posts.count }})</span>
+                              </a>
+                           </li>
+                        {% empty %}
+                           <li>No hay categorías disponibles.</li>
+                        {% endfor %}
                      </ul>
                   </div>
 
                   <!-- Widget -->
                   <div class="blog-widget">
-                     <h4 class="mb-4">Recent Post</h4>
-
+                     <h4 class="mb-4">Publicaciones Recientes</h4>
+                  
                      <div class="d-flex flex-column gap-4">
-                        <!-- Widget Blog Post -->
-                        <div class="widget-blog-post">
-                           <div class="blog-thumbnail">
-                              <img src="img/bg-img/41.jpg" alt="">
+                        {% for post in recientes %}
+                           <div class="widget-blog-post">
+                              <div class="blog-thumbnail">
+                                 <img src="{{ post.imagen.url }}" alt="{{ post.titulo }}">
+                              </div>
+                              <div class="blog-content">
+                                 <h6><a href="">{{ post.titulo }}</a></h6>
+                                 <p class="mb-0">{{ post.fecha_publicacion|date:"F d, Y" }}</p>
+                              </div>
                            </div>
-                           <div class="blog-content">
-                              <h6><a href="blog-details.html">Graphic Design Agency your Brand Needs.</a></h6>
-                              <p class="mb-0">March 26, 2024</p>
-                           </div>
-                        </div>
-
-                        <!-- Widget Blog Post -->
-                        <div class="widget-blog-post">
-                           <div class="blog-thumbnail">
-                              <img src="img/bg-img/42.jpg" alt="">
-                           </div>
-                           <div class="blog-content">
-                              <h6><a href="blog-details.html">Providing Brilliant Ideas For your Business</a></h6>
-                              <p class="mb-0">March 26, 2024</p>
-                           </div>
-                        </div>
-
-                        <!-- Widget Blog Post -->
-                        <div class="widget-blog-post">
-                           <div class="blog-thumbnail">
-                              <img src="img/bg-img/43.jpg" alt="">
-                           </div>
-                           <div class="blog-content">
-                              <h6><a href="blog-details.html">The Latest Trends With Digital Marketing</a></h6>
-                              <p class="mb-0">March 26, 2024</p>
-                           </div>
-                        </div>
+                        {% empty %}
+                           <p>No hay publicaciones recientes.</p>
+                        {% endfor %}
                      </div>
                   </div>
 
                   <!-- Widget -->
                   <div class="blog-widget">
-                     <h4 class="mb-4">Tag Cloud</h4>
-
+                     <h4 class="mb-4">Nube de Etiquetas</h4>
+                  
                      <ul class="tag-list list-unstyled">
-                        <li><a href="#">Agency</a></li>
-                        <li><a href="#">Business</a></li>
-                        <li><a href="#">Marketing</a></li>
-                        <li><a href="#">Modern</a></li>
-                        <li><a href="#">Creative</a></li>
-                        <li><a href="#">Digital</a></li>
-                        <li><a href="#">Design</a></li>
-                        <li><a href="#">Awards</a></li>
+                        {% for etiqueta in etiquetas %}
+                           <li>
+                              <a href="">
+                                 {{ etiqueta.nombre }}
+                              </a>
+                           </li>
+                        {% empty %}
+                           <li>No hay etiquetas disponibles.</li>
+                        {% endfor %}
                      </ul>
                   </div>
                </div>

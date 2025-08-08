@@ -29,7 +29,9 @@ urlpatterns = [
     path("blog/", views.blog, name="blog"),
     path('blog/<slug:slug>/', views.blog_detalles, name='blog_detalles'),
     path('etiqueta/<slug:slug>/', views.tag_detail, name='tag_detail'),
+    path('guardar-cv/', views.guardar_cv, name='guardar_cv'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
