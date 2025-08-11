@@ -135,3 +135,49 @@ def guardar_cv(request):
             messages.error(request, 'Todos los campos son obligatorios.')
 
     return redirect('equipo')
+
+
+def enviar_contacto(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        correo = request.POST.get('correo')
+        mensaje = request.POST.get('mensaje')
+
+        if nombre and correo and mensaje:
+            try:
+                # Correo para el administrador
+                email_admin = EmailMessage(
+                    subject=f"Nuevo mensaje de contacto de {nombre}",
+                    body=(
+                        f"Has recibido un nuevo mensaje desde el formulario de contacto:\n\n"
+                        f"Nombre: {nombre}\n"
+                        f"Correo: {correo}\n"
+                        f"Mensaje:\n{mensaje}\n"
+                    ),
+                    from_email="admin@mercadologosholding.com",
+                    to=["admin@mercadologosholding.com"],
+                )
+                email_admin.send()
+
+                # Respuesta automática al usuario
+                email_usuario = EmailMessage(
+                    subject="Hemos recibido tu mensaje - Mercadólogos Holding",
+                    body=(
+                        f"Hola {nombre},\n\n"
+                        "Gracias por contactarnos. Hemos recibido tu mensaje y "
+                        "te responderemos lo antes posible.\n\n"
+                        "Saludos,\n"
+                        "Equipo Mercadólogos Holding"
+                    ),
+                    from_email="admin@mercadologosholding.com",
+                    to=[correo],
+                )
+                email_usuario.send()
+
+                messages.success(request, 'Tu mensaje fue enviado con éxito.')
+            except Exception as e:
+                messages.error(request, f"Ocurrió un error al enviar el mensaje: {e}")
+        else:
+            messages.error(request, 'Todos los campos son obligatorios.')
+
+    return redirect('index')

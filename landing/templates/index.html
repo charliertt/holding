@@ -5,14 +5,96 @@
 
 {% block content %}
 
-   <section class="hero-wrapper">
+
+<style>
+   .alert-container {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 9999;
+          width: 400px;
+          max-width: 90vw;
+      }
+      
+      .alert-custom {
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          margin-bottom: 10px;
+          opacity: 0;
+          transform: translateX(100%);
+          animation: slideIn 0.3s ease-out forwards;
+      }
+      
+      .alert-success-custom {
+          background: linear-gradient(135deg, #28a745, #20c997);
+          color: white;
+          border: none;
+      }
+      
+      .alert-error-custom {
+          background: linear-gradient(135deg, #dc3545, #e74c3c);
+          color: white;
+          border: none;
+      }
+      
+      .alert-dismissible .btn-close {
+          filter: invert(1);
+      }
+      
+      @keyframes slideIn {
+          to {
+              opacity: 1;
+              transform: translateX(0);
+          }
+      }
+      
+      @keyframes slideOut {
+          from {
+              opacity: 1;
+              transform: translateX(0);
+          }
+          to {
+              opacity: 0;
+              transform: translateX(100%);
+          }
+      }
+      
+      .alert-hiding {
+          animation: slideOut 0.3s ease-in forwards;
+      }
+</style>
+
+
+   <section class="hero-wrapper mt-4">
       <div class="divider"></div>
 
       <div class="container">
          <div class="row">
             <div class="col-12">
                <div class="hero-content">
-                  <h2 class="mb-0 wow fadeInUp" data-wow-duration="1000ms" data-wow-delay="500ms">Mercadólogos</h2>
+   
+
+             <h2 class="mb-0 wow fadeInUp" data-wow-duration="1000ms" data-wow-delay="500ms">
+  Mercadol<span style="color:#0159ab;">ó</span>gos
+</h2>
+
+                  <div class="alert-container">
+                     {% if messages %}
+                         {% for message in messages %}
+                             <div class="alert alert-custom {% if message.tags == 'success' %}alert-success-custom{% elif message.tags == 'error' %}alert-error-custom{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                                 <div class="d-flex align-items-center">
+                                     <div class="flex-grow-1">
+                                         <strong>
+                                             {% if message.tags == 'success' %}¡Éxito!{% elif message.tags == 'error' %}¡Error!{% endif %}
+                                         </strong>
+                                         <div>{{ message }}</div>
+                                     </div>
+                                 </div>
+                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                             </div>
+                         {% endfor %}
+                     {% endif %}
+                 </div>
                   <h2 class="mb-0 d-md-flex align-items-center wow fadeInUp" data-wow-duration="1000ms"
                      data-wow-delay="800ms">Holding
                      <span class=" hero-subtitle mt-3 wow fadeInUp" data-wow-duration="1000ms" data-wow-delay="1000ms">
@@ -27,25 +109,41 @@
       <div class="divider"></div>
    </section>
 
-   <div class="cta-wrap jarallax h-100" data-jarallax="" data-speed="0.6" style="background-image: url('{% static 'img/bg-img/astro.png' %}');">
-      <div class="divider"></div>
-
-      <div class="container">
-         <div class="row justify-content-end">
-            <div class="col-12 col-sm-11 col-md-9 offset-md-2 col-lg-6 offset-lg-1 col-xl-5 offset-xl-1 col-xxl-4 offset-xxl-1">
-               <div class="cta-card">
-                  <div class="cta-stats h-50">
-
-                    <h5>Un sitio web es tu vendedor 24/7, nosotros lo entrenamos para cerrar tratos con tu audiencia.</h5>
-                  </div>
-               </div>
-            </div>
+   <div class="cta-wrap jarallax h-100" data-jarallax="" data-speed="0.6">
+      <img src="{% static 'img/bg-img/astro.png' %}" class="astronauta" alt="Astronauta">
+      <div class="catagory-slide" id="catagorySlide">
+         <div class="marquee3k" data-speed="1">
+             <div>
+                 <h2 class="d-flex align-items-center mb-0">
+                     <span>#</span>
+                     <span>Estrategia Digital</span> 
+                     <span>#</span>
+                    <span>Inteligencia Artificial IA</span> 
+                     <span>#</span>
+                    <span>Diseño y Desarrollo Web</span> 
+                     <span>#</span>
+                    <span>SEO y SEM</span> 
+                     <span>#</span>
+                    <span>Creación de Contenido</span> 
+                     <span>#</span>
+                    <span>E-commerce Marketing</span> 
+                 </h2>
+             </div>
          </div>
-      </div>
+     </div>
+   
 
-      <div class="divider"></div>
+      
+
+   
+
+
+      
+
+   
    </div>
 
+   
    <div class="latest-service-wrapper bg-secondary">
       <div class="divider"></div>
   
@@ -54,6 +152,7 @@
               <div class="col-12 col-sm-6">
                   <div class="section-heading">
                       <h2 class="mb-0">Nuestras Soluciones Integrales</h2>
+                      
                   </div>
               </div>
   
@@ -689,12 +788,15 @@
       <div class="contact-wrapper" style="background-image: url('{% static 'img/bg-img/12.jpg' %}');">
           <div class="contact-form">
               <h3 class="mb-4">Ponte en contacto</h3>
-              <form action="#" method="post" class="mt-3">
-                  <input type="text" name="text" class="form-control" placeholder="Nombre">
-                  <input type="email" name="email" class="form-control" placeholder="Correo Electrónico">
-                  <textarea name="message" class="form-control" placeholder="Mensaje" id="message"></textarea>
-                  <button class="btn btn-primary mt-3"><span>ENVIAR MENSAJE</span><span>ENVIAR MENSAJE</span></button>
-              </form>
+              <form action="{% url 'enviar_contacto' %}" method="post" class="mt-3">
+               {% csrf_token %}
+               <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+               <input type="email" name="correo" class="form-control" placeholder="Correo Electrónico" required>
+               <textarea name="mensaje" class="form-control" placeholder="Mensaje" id="message" required></textarea>
+               <button class="btn btn-primary mt-3">
+                   <span>ENVIAR MENSAJE</span><span>ENVIAR MENSAJE</span>
+               </button>
+           </form>
           </div>
       </div>
   

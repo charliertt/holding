@@ -66,6 +66,11 @@
 /*
 propios*/
 
+.astronauta {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
 
 /* ===== MODO CLARO ===== */
 .light-mode .elfsight-app-6f5dc3e3-eace-4016-8aba-57e58e25b4ec {
